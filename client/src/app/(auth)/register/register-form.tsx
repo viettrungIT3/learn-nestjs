@@ -21,8 +21,10 @@ import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import authApiRequest from "@/apiRequests/auth";
 import { handleErrorApi } from "@/lib/utils";
+import { useState } from "react";
 
 const RegisterForm = () => {
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
   const form = useForm<RegisterBodyType>({
@@ -37,6 +39,8 @@ const RegisterForm = () => {
 
   // 2. Define a submit handler.
   async function onSubmit(values: RegisterBodyType) {
+    if (loading) return;
+    setLoading(true);
     try {
       const result = await authApiRequest.register(values);
       toast({
@@ -49,6 +53,8 @@ const RegisterForm = () => {
         error,
         setError: form.setError,
       });
+    } finally {
+      setLoading(false);
     }
   }
   return (
