@@ -17,8 +17,13 @@ import {
   RegisterBodyType,
 } from "@/schemaValidations/auth.schema";
 import envConfig from "@/config";
+import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
+import authApiRequest from "@/apiRequests/auth";
 
 const RegisterForm = () => {
+  const { toast } = useToast();
+  const router = useRouter();
   const form = useForm<RegisterBodyType>({
     resolver: zodResolver(RegisterBody),
     defaultValues: {
@@ -31,18 +36,34 @@ const RegisterForm = () => {
 
   // 2. Define a submit handler.
   async function onSubmit(values: RegisterBodyType) {
-    const result = await fetch(
-      `${envConfig.NEXT_PUBLIC_API_ENDPOINT}/auth/register`,
-      {
-        body: JSON.stringify(values),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
+    try {
+      const result = await authApiRequest.register(values);
+      toast({
+        description: result.payload.message,
+      });
+      await authApiRequest.auth({ sessionToken: result.payload.data.token });
+      router.push("/me");
+    } catch (error: any) {
+      const errors = error.payload.errors as {
+        field: string;
+        message: string;
+      }[];
+      const status = error.status as number;
+      if (status === 422) {
+        errors.forEach((error) => {
+          form.setError(error.field as "email" | "password", {
+            type: "server",
+            message: error.message,
+          });
+        });
+      } else {
+        toast({
+          title: "Lỗi",
+          description: error.payload.message,
+          variant: "destructive",
+        });
       }
-    ).then((res) => res.json())
-    console.log(result);
-    
+    }
   }
   return (
     <Form {...form}>
@@ -97,7 +118,11 @@ const RegisterForm = () => {
             <FormItem>
               <FormLabel>Nhập lại mật khẩu</FormLabel>
               <FormControl>
-                <Input placeholder="Nhập lại mật khẩu" type="password" {...field} />
+                <Input
+                  placeholder="Nhập lại mật khẩu"
+                  type="password"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
