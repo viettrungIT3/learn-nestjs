@@ -16,6 +16,7 @@ import { LoginBody, LoginBodyType } from "@/schemaValidations/auth.schema";
 import { useToast } from "@/components/ui/use-toast";
 import authApiRequest from "@/apiRequests/auth";
 import { useRouter } from 'next/navigation';
+import { handleErrorApi } from "@/lib/utils";
 
 const LoginForm = () => {
   const { toast } = useToast();
@@ -40,23 +41,9 @@ const LoginForm = () => {
       });
       router.push("/me");
     } catch (error: any) {
-      const errors = error.payload.errors as {
-        field: string;
-        message: string;
-      }[];
-      const status = error.status as number;
-      if (status === 422) {
-        errors.forEach((error) => {
-          form.setError(error.field as "email" | "password", {
-            type: "server",
-            message: error.message,
-          });
-        });
-      }
-      toast({
-        title: "Lỗi",
-        description: error.payload.message,
-        variant: "destructive",
+      handleErrorApi({
+        error,
+        setError: form.setError,
       });
     }
   }
