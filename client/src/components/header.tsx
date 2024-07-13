@@ -1,9 +1,10 @@
-"use client";
 import { ModeToggle } from "@/components/mode-toggle";
 import Link from "next/link";
 import Image from "next/image";
+import ButtonLogout from "@/components/button-logout";
 
 export default function Header() {
+
   return (
     <header
       className="sticky top-0"
@@ -27,25 +28,21 @@ export default function Header() {
             padding: 0,
           }}
         >
-          {localStorage.getItem("sessionToken") != "" ? (
-            <>
-              <li style={{ marginRight: "1rem" }}>
-                <Link href="/me">Thông tin cá nhân</Link>
-              </li>
-              <li style={{ marginRight: "1rem" }}>
-                <Link href="/logout">Đăng xuất</Link>
-              </li>
-            </>
-          ) : (
-            <>
-              <li style={{ marginRight: "1rem" }}>
-                <Link href="/login">Đăng nhập</Link>
-              </li>
-              <li style={{ marginRight: "1rem" }}>
-                <Link href="/register">Đăng ký</Link>
-              </li>
-            </>
-          )}
+          {/* TODO: check sessionToken to show actions */}
+          {/* if */}
+          <li style={{ marginRight: "1rem" }}>
+            <Link href="/me">Thông tin cá nhân</Link>
+          </li>
+          <li style={{ marginRight: "1rem" }}>
+            <ButtonLogout />
+          </li>
+          {/* else */}
+          <li style={{ marginRight: "1rem" }}>
+            <Link href="/login">Đăng nhập</Link>
+          </li>
+          <li style={{ marginRight: "1rem" }}>
+            <Link href="/register">Đăng ký</Link>
+          </li>
           <li>
             <ModeToggle />
           </li>
