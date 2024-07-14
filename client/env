@@ -1,1 +1,7 @@
 NEXT_PUBLIC_API_ENDPOINT = http://localhost:3001
+
+# định nghĩa khoảng thời gian interval cho việc SlideSession.
+# Nếu SESSION_SLIDE_INTERVAL là số thì nó sẽ tính theo giây (nhưng lưu ý là value lấy ra từ env luôn là string, nên tốt nhất dùng giây thì ghi là '30s')
+# Nếu SESSION_SLIDE_INTERVAL là string thì phải quy định thêm các ký tự như 'm', 'h', 'd', 'w'
+# string mà không quy định thì nó sẽ tính theo milisecond
+NEXT_PUBLIC_SESSION_SLIDE_INTERVAL=10m
