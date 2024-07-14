@@ -1,7 +1,7 @@
-import { ModeToggle } from "@/components/mode-toggle";
-import Link from "next/link";
-import Image from "next/image";
 import ButtonLogout from "@/components/button-logout";
+import { ModeToggle } from "@/components/mode-toggle";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Header() {
 
@@ -28,6 +28,12 @@ export default function Header() {
             padding: 0,
           }}
         >
+          <li style={{ marginRight: "1rem" }}>
+            <Link href="/products">Sản phẩm</Link>
+          </li>
+          <li style={{ marginRight: "1rem" }}>
+            |
+          </li>
           {/* TODO: check sessionToken to show actions */}
           {/* if */}
           <li style={{ marginRight: "1rem" }}>
