@@ -2,12 +2,16 @@ import { Message } from "./../../node_modules/react-hook-form/dist/types/errors.
 import envConfig from "@/config";
 import { normalizePath } from "@/lib/utils";
 import { LoginResType } from "@/schemaValidations/auth.schema";
+import { redirect } from "next/navigation";
+
+let clientLogoutRequest: null | Promise<any> = null;
 
 type CustomOptions = Omit<RequestInit, "method"> & {
   baseUrl?: string | undefined;
 };
 
 const ENTITY_ERROR_STATUS = 422;
+const AUTHENTICATION_ERROR_STATUS = 401;
 
 type EntityErrorPayload = {
   message: string;
@@ -109,6 +113,28 @@ const request = async <Response>(
           payload: EntityErrorPayload;
         }
       );
+    } else if (res.status === AUTHENTICATION_ERROR_STATUS) {
+      if (typeof window !== "undefined") {
+        if (!clientLogoutRequest) {
+          clientLogoutRequest = fetch("/api/auth/logout", {
+            method: "POST",
+            body: JSON.stringify({ force: true }),
+            headers: {
+              ...baseHeaders,
+            },
+          });
+
+          await clientLogoutRequest;
+          clientSessionToken.value = "";
+          clientLogoutRequest = null;
+          location.href = "/login";
+        }
+      } else {
+        const sessionToken = (options?.headers as any)?.Authorization.split(
+          "Bearer "
+        )[1];
+        redirect(`/logout?sessionToken=${sessionToken}`);
+      }
     } else {
       throw new HttpError(data);
     }
