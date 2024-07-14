@@ -2,20 +2,20 @@
 
 import authApiRequest from "@/apiRequests/auth";
 import { clientSessionToken } from "@/lib/http";
-import { useEffect } from "react";
 import ms from "ms";
+import { useEffect } from "react";
 
 export default function SlideSession() {
   useEffect(() => {
-    const sessionTimeStr = process.env.NEXT_PUBLIC_SLIDE_SESSION_TIME;
+    const sessionTimeStr = process.env.NEXT_PUBLIC_SESSION_SLIDE_INTERVAL;
     if (!sessionTimeStr) {
-      console.error("NEXT_PUBLIC_SLIDE_SESSION_TIME is not defined");
+      console.error("NEXT_PUBLIC_SESSION_SLIDE_INTERVAL is not defined");
       return;
     }
 
     const sessionTimeMs = ms(sessionTimeStr);
     if (sessionTimeMs === undefined) {
-      console.error("Invalid NEXT_PUBLIC_SLIDE_SESSION_TIME format");
+      console.error("Invalid NEXT_PUBLIC_SESSION_SLIDE_INTERVAL format");
       return;
     }
 
