@@ -1,12 +1,12 @@
+import AppProvider from "@/app/app-provider";
+import Header from "@/components/header";
+import SlideSession from "@/components/slide-session";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import AppProvider from "@/app/AppProvider";
 import { cookies } from "next/headers";
-import Header from "@/components/header";
-import { Toaster } from "@/components/ui/toaster";
-import SlideSession from "@/components/slide-session";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,7 +34,7 @@ export default function RootLayout({
         >
           <Header />
           <AppProvider inititalSessionToken={sessionToken?.value}>
-          <SlideSession />
+            <SlideSession />
             {children}
           </AppProvider>
         </ThemeProvider>
